@@ -31,4 +31,9 @@ mod tests {
             7pqrstsixteen
             sxsevensevenpmpjjvdlr9f5eight")), 281 + 78);
     }
+
+    #[test]
+    fn the_real_test() {
+        assert_eq!(calculate_multiple_calibrations(std::fs::read_to_string("calibration_file.txt").expect("Forgot the file...")), 54203);
+    }
 }

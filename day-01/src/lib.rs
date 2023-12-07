@@ -27,11 +27,13 @@ pub fn calculate_calibration(calibration_string: String) -> u32 {
     calibration_string
         .chars()
         .for_each(|character| {
+            // In case the number is typed normally
             let digit = character.to_string().parse::<u32>();
             if digit.is_ok() {
                 digits.push(digit.unwrap())
             }
 
+            // In case the number is typed with letters
             number_string += &character.to_string();
 
             let mut found_number = None;
