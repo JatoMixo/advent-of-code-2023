@@ -56,7 +56,6 @@ pub fn calculate_multiple_calibrations(calibrations: String) -> u32 {
     let mut result: u32 = 0;
 
     calibrations.split("\n").for_each(|row| {
-        println!("{}", calculate_calibration(row.to_string()));
         result += calculate_calibration(row.to_string());
     });
 
