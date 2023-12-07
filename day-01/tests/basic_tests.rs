@@ -28,6 +28,7 @@ mod tests {
             xtwone3four
             4nineeightseven2
             zoneight234
-            7pqrstsixteen")), 281);
+            7pqrstsixteen
+            sxsevensevenpmpjjvdlr9f5eight")), 281 + 78);
     }
 }

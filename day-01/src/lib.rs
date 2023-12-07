@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 fn remove_last_char(string: String) -> String {
     let mut chars = string.chars();
-    chars.next();
+    chars.next_back();
 
     chars.as_str().to_string()
 }
