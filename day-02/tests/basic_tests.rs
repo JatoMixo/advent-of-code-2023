@@ -9,7 +9,7 @@ mod tests {
         assert_eq!(Cubes::from_string("3 blue, 4 red".to_string()), Cubes { blue: 3, red: 4, green: 0 });
         assert_eq!(Cubes::from_string("1 red, 2 green, 6 blue".to_string()), Cubes { blue: 6, red: 1, green: 2 });
 
-        assert_eq!(Cubes::from_string("1 blue".to_string()), Cubes { blue: 1, red: 0, green: 0 });
+        assert_eq!(Cubes::from_string("1 Blue".to_string()), Cubes { blue: 1, red: 0, green: 0 });
         assert_eq!(Cubes::from_string("6 red, 1 blue, 3 green".to_string()), Cubes { red: 6, blue: 1, green: 3 });
     }
 
@@ -26,7 +26,7 @@ mod tests {
     fn test_is_game_valid() {
         let game = Game::from_string("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green".to_string());
         
-        assert_eq!(game.is_game_valid_with(Cubes { red: 12, green: 13, blue: 14 }), true);
-        assert_eq!(game.is_game_valid_with(Cubes { red: 0, green: 13, blue: 14 }), false);
+        assert_eq!(game.is_game_valid_with(&Cubes { red: 12, green: 13, blue: 14 }), true);
+        assert_eq!(game.is_game_valid_with(&Cubes { red: 0, green: 13, blue: 14 }), false);
     }
 }

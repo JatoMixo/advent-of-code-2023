@@ -20,7 +20,7 @@ impl Cubes {
             "red" => self.red = value,
             "green" => self.green = value,
             "blue" => self.blue = value,
-            _ => println!("You fucked up the color, man"),
+            _ => println!("You fucked up the color ={}=", color),
         };
     }
 
@@ -33,7 +33,8 @@ impl Cubes {
         split_string.into_iter().for_each(|section| {
             let color_parsed = section.split(" ").collect::<Vec<&str>>();
 
-            result.set_color_by_string(color_parsed[1], color_parsed[0].parse::<u32>().unwrap());
+            let color = color_parsed[1].to_lowercase();
+            result.set_color_by_string(color.trim(), color_parsed[0].parse::<u32>().unwrap());
         });
 
         result
@@ -82,7 +83,7 @@ impl Game {
         result
     }
 
-    pub fn is_game_valid_with(&self, cubes: Cubes) -> bool {
+    pub fn is_game_valid_with(&self, cubes: &Cubes) -> bool {
         let mut total_cubes = Cubes::new();
 
         for cube_index in 0..self.cubes_shown.len() {
@@ -93,4 +94,19 @@ impl Game {
 
         total_cubes.red <= cubes.red && total_cubes.blue <= cubes.blue && total_cubes.green <= cubes.green
     }
+}
+
+pub fn select_games_valid(games_string: String, cubes: Cubes) -> Vec<u32> {
+
+    let mut result = Vec::new();
+
+    let games = games_string.split("\n").collect::<Vec<&str>>();
+    games.into_iter().for_each(|games_string| {
+        let game = Game::from_string(games_string.to_string());
+        if game.is_game_valid_with(&cubes) {
+            result.push(game.id);
+        }
+    });
+
+    result
 }
