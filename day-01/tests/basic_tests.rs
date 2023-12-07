@@ -19,4 +19,15 @@ mod tests {
             a1b2c3d4e5f
             treb7uchet")), 142);
     }
+
+    #[test]
+    fn test_with_letters() {
+        assert_eq!(calculate_multiple_calibrations(String::from("two1nine
+            eightwothree
+            abcone2threexyz
+            xtwone3four
+            4nineeightseven2
+            zoneight234
+            7pqrstsixteen")), 281);
+    }
 }
