@@ -1,10 +1,27 @@
 use std::collections::HashMap;
 
-fn remove_last_char(string: String) -> String {
+fn remove_last_char(string: &String) -> String {
     let mut chars = string.chars();
     chars.next_back();
 
     chars.as_str().to_string()
+}
+
+fn find_number_in_string(number_string: &String, numbers: &HashMap<&str, u32>) -> Option<String> {
+    let mut found_number = None;
+
+    numbers
+        .keys()
+        .filter(|&key| number_string.contains(key))
+        .for_each(|&number| {
+            found_number = Some(number.to_string());
+        });
+    
+    found_number
+}
+
+fn remove_number_from_string(number_string: &String, found_number: &String) -> String {
+    number_string.replace(&remove_last_char(&found_number), "")
 }
 
 pub fn calculate_calibration(calibration_string: String) -> u32 {
@@ -36,17 +53,10 @@ pub fn calculate_calibration(calibration_string: String) -> u32 {
             // In case the number is typed with letters
             number_string += &character.to_string();
 
-            let mut found_number = None;
-            numbers
-                .keys()
-                .filter(|&key| number_string.contains(key))
-                .for_each(|&number| {
-                    digits.push(*numbers.get(number).unwrap());
-                    found_number = Some(number);
-                });
-            
+            let found_number = find_number_in_string(&number_string, &numbers);
             if found_number.is_some() {
-                number_string = number_string.replace(&remove_last_char(found_number.unwrap().to_string()), "");
+                number_string = remove_number_from_string(&number_string, &found_number.clone().unwrap());
+                digits.push(*numbers.get(&found_number.unwrap().as_str()).unwrap());
             }
         });
     
