@@ -81,4 +81,16 @@ impl Game {
 
         result
     }
+
+    pub fn is_game_valid_with(&self, cubes: Cubes) -> bool {
+        let mut total_cubes = Cubes::new();
+
+        for cube_index in 0..self.cubes_shown.len() {
+            total_cubes.red += self.cubes_shown[cube_index].red;
+            total_cubes.green += self.cubes_shown[cube_index].green;
+            total_cubes.blue += self.cubes_shown[cube_index].blue;
+        };
+
+        total_cubes.red <= cubes.red && total_cubes.blue <= cubes.blue && total_cubes.green <= cubes.green
+    }
 }
