@@ -92,6 +92,18 @@ impl Game {
 
         true
     }
+
+    pub fn get_power(&self) -> u32 {
+        let mut result = Cubes::new();
+
+        self.cubes_shown.iter().for_each(|cubes| {
+            result.red = std::cmp::max(result.red, cubes.red);
+            result.green = std::cmp::max(result.green, cubes.green);
+            result.blue = std::cmp::max(result.blue, cubes.blue);
+        });
+
+        result.red * result.blue * result.green
+    }
 }
 
 pub fn select_games_valid(games_string: String, cubes: Cubes) -> Vec<u32> {
@@ -105,6 +117,19 @@ pub fn select_games_valid(games_string: String, cubes: Cubes) -> Vec<u32> {
             result.push(game.id);
         }
     });
+
+    result
+}
+
+pub fn get_power_of_games(games_string: String) -> u32 {
+    let mut result = 0;
+
+    games_string
+        .split("\r\n")
+        .for_each(|game_string| {
+            let game = Game::from_string(game_string.to_string());
+            result += game.get_power();
+        });
 
     result
 }
