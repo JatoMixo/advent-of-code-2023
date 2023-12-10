@@ -84,15 +84,13 @@ impl Game {
     }
 
     pub fn is_game_valid_with(&self, cubes: &Cubes) -> bool {
-        let mut total_cubes = Cubes::new();
-
         for cube_index in 0..self.cubes_shown.len() {
-            total_cubes.red += self.cubes_shown[cube_index].red;
-            total_cubes.green += self.cubes_shown[cube_index].green;
-            total_cubes.blue += self.cubes_shown[cube_index].blue;
+            if cubes.red < self.cubes_shown[cube_index].red || cubes.green < self.cubes_shown[cube_index].green || cubes.blue < self.cubes_shown[cube_index].blue {
+                return false;
+            }
         };
 
-        total_cubes.red <= cubes.red && total_cubes.blue <= cubes.blue && total_cubes.green <= cubes.green
+        true
     }
 }
 
@@ -100,7 +98,7 @@ pub fn select_games_valid(games_string: String, cubes: Cubes) -> Vec<u32> {
 
     let mut result = Vec::new();
 
-    let games = games_string.split("\n").collect::<Vec<&str>>();
+    let games = games_string.split("\r\n").collect::<Vec<&str>>();
     games.into_iter().for_each(|games_string| {
         let game = Game::from_string(games_string.to_string());
         if game.is_game_valid_with(&cubes) {
