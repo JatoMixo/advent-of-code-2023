@@ -78,7 +78,6 @@ pub fn get_stacked_value(cards: String) -> u64 {
     let mut cards_to_calculate: HashMap<u64, u64> = HashMap::new();
 
     let cards_vec = cards.split("\n").collect::<Vec<&str>>();
-    cards_to_calculate.insert(1, 1);
 
     for card in 0..cards_vec.len() {
         let game = cards_vec[card as usize];
@@ -87,10 +86,6 @@ pub fn get_stacked_value(cards: String) -> u64 {
         let card_numbers = get_card_numbers(game);
 
         let correct_numbers = get_correct_numbers(winner_numbers, card_numbers);
-
-        if correct_numbers == 0 {
-            break;
-        }
 
         cards_to_calculate.entry(get_game_id(game)).and_modify(|quantity| *quantity += 1).or_insert(1);
 
