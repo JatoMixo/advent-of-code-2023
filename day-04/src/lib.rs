@@ -80,28 +80,22 @@ pub fn get_stacked_value(cards: String) -> u64 {
     let cards_vec = cards.split("\n").collect::<Vec<&str>>();
 
     for card in 0..cards_vec.len() {
-        let game = cards_vec[card as usize];
+        let game = cards_vec[card];
 
+        let game_id = get_game_id(game);
         let winner_numbers = get_winner_numbers(game);
         let card_numbers = get_card_numbers(game);
 
         let correct_numbers = get_correct_numbers(winner_numbers, card_numbers);
 
-        cards_to_calculate.entry(get_game_id(game)).and_modify(|quantity| *quantity += 1).or_insert(1);
-
-        for number in 1..correct_numbers + 1 {
-            let card_increase = 1 * cards_to_calculate.get(&get_game_id(game)).unwrap_or(&0);
-            cards_to_calculate.entry(number + get_game_id(game)).and_modify(|quantity| *quantity += card_increase).or_insert(1);
+        cards_to_calculate.entry(game_id).and_modify(|quantity| *quantity += 1).or_insert(1);
+        for number in 1..(correct_numbers + 1) {
+            let card_increase = *cards_to_calculate.get(&game_id).unwrap();
+            cards_to_calculate.entry(number + game_id).and_modify(|quantity| *quantity += card_increase).or_insert(card_increase);
         }
     }
 
-    let mut result = 0;
     cards_to_calculate
-        .keys()
-        .into_iter()
-        .for_each(|&key| {
-            result += cards_to_calculate.get(&key).unwrap();
-        });
-
-    result
+        .values()
+        .sum::<u64>()
 }
