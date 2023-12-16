@@ -52,6 +52,59 @@ pub fn calculate_schematic(schematic: String) -> u32 {
         };
     };
 
-    println!("{}", valid_numbers[2]);
     valid_numbers.iter().sum()
+}
+
+fn get_substring(schematics_line: &String, border_left: usize, border_right: usize) -> String {
+
+    let mut substring = String::new();
+
+    for character in border_left..border_right + 1 {
+        substring.push(schematics_line.chars().nth(character).unwrap());
+    }
+
+    substring
+}
+
+fn get_gear_section(schematics_line: &String, line_length: &usize, character_index: &usize) -> String {
+    let border_left = std::cmp::max(0, *character_index as u32 - (*line_length as u32 + 3)) as usize;
+    let border_right = std::cmp::min(schematics_line.len() as u32 - 1, *character_index as u32 + (*line_length as u32 + 3)) as usize;
+
+    let gear_section = get_substring(schematics_line, border_left, border_right);
+
+    gear_section
+}
+
+fn get_gear_value(gear_section: &String) -> u64 {
+
+    // Filter string to remove imposible positions
+    let middle_point = (gear_section.len() as f32 / 2f32).floor() as usize;
+    let filtered_string = get_substring(gear_section, 0, 6) + &get_substring(gear_section, middle_point - 3, middle_point + 2) + &get_substring(gear_section, gear_section.len() - 8, gear_section.len() - 1);
+
+    println!("{}", filtered_string);
+
+    0
+}
+
+pub fn get_gear_ratio(schematics: String) -> u64 {
+    let mut result = 0;
+
+    let line_length: usize = schematics.split("\n").collect::<Vec<&str>>()[0].len();
+    let schematics_line: String = schematics.replace("\n", "");
+
+    for character_index in 0..schematics_line.len() {
+        let character = schematics_line.chars().nth(character_index).unwrap();
+
+        if character != '*' {
+            continue;
+        }
+
+        let gear_section = get_gear_section(&schematics_line, &line_length, &character_index);
+        let gear_value = get_gear_value(&gear_section);
+
+        println!("{}", gear_section);
+        result += gear_value;
+    }
+
+    result
 }

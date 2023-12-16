@@ -1,7 +1,7 @@
-use day_03::calculate_schematic;
+use day_03::get_gear_ratio;
 
 fn main() {
     let input = std::fs::read_to_string("engine_schematic.txt").expect("Forgot the file...");
 
-    println!("{}", calculate_schematic(input));
+    println!("{}", get_gear_ratio(input));
 }
