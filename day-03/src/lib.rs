@@ -81,9 +81,46 @@ fn get_gear_value(gear_section: &String) -> u64 {
     let middle_point = (gear_section.len() as f32 / 2f32).floor() as usize;
     let filtered_string = get_substring(gear_section, 0, 6) + &get_substring(gear_section, middle_point - 3, middle_point + 2) + &get_substring(gear_section, gear_section.len() - 8, gear_section.len() - 1);
 
-    println!("{}", filtered_string);
+    let mut numbers: Vec<u64> = Vec::new();
+    let mut actual_number = 0;
+    filtered_string
+        .chars()
+        .into_iter()
+        .for_each(|character| {
+            if character.to_string().parse::<u64>().is_err() {
+                if actual_number != 0 {
+                    numbers.push(actual_number);
+                }
 
-    0
+                actual_number = 0;
+            }
+
+            actual_number = actual_number * 10 + character.to_string().parse::<u64>().unwrap_or(0);
+        });
+
+    let mut first_number = 0;
+    let mut final_number = 0;
+
+    for number in 0..numbers.len() {
+
+        if number <= 9 {
+            continue;
+        }
+
+        if first_number == 0 {
+            first_number = numbers[number];
+        }
+
+        final_number = numbers[number];
+    };
+
+    println!("{}", filtered_string);
+    println!("{:?}", numbers);
+    if first_number == final_number {
+        return 0;
+    }
+
+    first_number * final_number
 }
 
 pub fn get_gear_ratio(schematics: String) -> u64 {
@@ -102,7 +139,6 @@ pub fn get_gear_ratio(schematics: String) -> u64 {
         let gear_section = get_gear_section(&schematics_line, &line_length, &character_index);
         let gear_value = get_gear_value(&gear_section);
 
-        println!("{}", gear_section);
         result += gear_value;
     }
 
