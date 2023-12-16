@@ -98,12 +98,18 @@ fn get_gear_value(gear_section: &String) -> u64 {
             actual_number = actual_number * 10 + character.to_string().parse::<u64>().unwrap_or(0);
         });
 
+    // Actual calculation
     let mut first_number = 0;
     let mut final_number = 0;
 
     for number in 0..numbers.len() {
 
-        if number <= 9 {
+        if number >= numbers.len() {
+            break;
+        }
+
+        if numbers[number] <= 9 {
+            numbers.remove(number);
             continue;
         }
 
@@ -114,9 +120,7 @@ fn get_gear_value(gear_section: &String) -> u64 {
         final_number = numbers[number];
     };
 
-    println!("{}", filtered_string);
-    println!("{:?}", numbers);
-    if first_number == final_number {
+    if first_number == final_number || final_number == 0 {
         return 0;
     }
 
