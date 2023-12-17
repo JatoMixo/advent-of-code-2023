@@ -75,33 +75,22 @@ fn get_substring(schematics_line: &String, border_left: usize, border_right: usi
     substring
 }
 
-// TODO: Refactor these 3 functions into one to remove duplicate code
-fn get_upper_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
-    if line_index == 0 {
-        return String::new();
+fn get_sections(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> (String, String, String) {
+    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
+    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
+
+    let mut upper = String::new();
+    let mut lower = String::new();
+
+    if line_index != 0 {
+        upper = get_substring(&schematics_vec[line_index - 1].to_string(), maximum_left, maximum_right);
     }
 
-    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
-    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
-    get_substring(&schematics_vec[line_index - 1].to_string(), maximum_left, maximum_right)
-}
-
-fn get_middle_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
-    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
-    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
-
-    get_substring(&schematics_vec[line_index].to_string(), maximum_left, maximum_right)
-}
-
-fn get_lower_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
-    if line_index == schematics_vec.len() - 1 {
-        return String::new();
+    if line_index != schematics_vec.len() - 1 {
+        lower = get_substring(&schematics_vec[line_index + 1].to_string(), maximum_left, maximum_right);
     }
 
-    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
-    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
-
-    get_substring(&schematics_vec[line_index + 1].to_string(), maximum_left, maximum_right)
+    (upper, get_substring(&schematics_vec[line_index].to_string(), maximum_left, maximum_right), lower)
 }
 
 fn get_numbers_in_line(line: String) -> Vec<u64> {
@@ -137,9 +126,7 @@ fn get_numbers_in_line(line: String) -> Vec<u64> {
 fn get_gear_numbers(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> Vec<u64> {
     let mut result: Vec<u64> = Vec::new();
 
-    let upper_section = get_upper_section(schematics_vec, line_index, character_index);
-    let middle_section = get_middle_section(schematics_vec, line_index, character_index);
-    let lower_section = get_lower_section(schematics_vec, line_index, character_index);
+    let (upper_section, middle_section, lower_section) = get_sections(schematics_vec, line_index, character_index);
 
     result.extend(get_numbers_in_line(upper_section));
     result.extend(get_numbers_in_line(middle_section));

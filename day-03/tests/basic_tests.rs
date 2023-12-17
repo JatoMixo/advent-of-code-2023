@@ -37,4 +37,9 @@ mod tests {
 ...$.*....
 .664.598..".to_string()), 467835);
     }
+
+    #[test]
+    fn the_definitve_2() {
+        assert_eq!(get_gear_ratio(std::fs::read_to_string("engine_schematic.txt").expect("The file...")), 79613331);
+    }
 }
