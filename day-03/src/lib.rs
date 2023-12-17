@@ -55,95 +55,84 @@ pub fn calculate_schematic(schematic: String) -> u32 {
     valid_numbers.iter().sum()
 }
 
+fn get_gear_value(gear_numbers: Vec<u64>) -> u64 {
+    // A gear has exactly two adjacent numbers, so if the length is different than 2, is not a gear.
+    if gear_numbers.len() != 2 {
+        return 0;
+    }
+
+    gear_numbers[0] * gear_numbers[1]
+}
+
 fn get_substring(schematics_line: &String, border_left: usize, border_right: usize) -> String {
 
     let mut substring = String::new();
 
-    for character in border_left..border_right + 1 {
+    for character in border_left..border_right {
         substring.push(schematics_line.chars().nth(character).unwrap());
     }
 
     substring
 }
 
-fn get_gear_section(schematics_line: &String, line_length: &usize, character_index: &usize) -> String {
-    let border_left = std::cmp::max(0, *character_index as u32 - (*line_length as u32 + 3)) as usize;
-    let border_right = std::cmp::min(schematics_line.len() as u32 - 1, *character_index as u32 + (*line_length as u32 + 3)) as usize;
-
-    let gear_section = get_substring(schematics_line, border_left, border_right);
-
-    gear_section
-}
-
-fn get_gear_value(gear_section: &String) -> u64 {
-
-    // Filter string to remove imposible positions
-    let middle_point = (gear_section.len() as f32 / 2f32).floor() as usize;
-    let filtered_string = get_substring(gear_section, 0, 6) + &get_substring(gear_section, middle_point - 3, middle_point + 2) + &get_substring(gear_section, gear_section.len() - 8, gear_section.len() - 1);
-
-    let mut numbers: Vec<u64> = Vec::new();
-    let mut actual_number = 0;
-    filtered_string
-        .chars()
-        .into_iter()
-        .for_each(|character| {
-            if character.to_string().parse::<u64>().is_err() {
-                if actual_number != 0 {
-                    numbers.push(actual_number);
-                }
-
-                actual_number = 0;
-            }
-
-            actual_number = actual_number * 10 + character.to_string().parse::<u64>().unwrap_or(0);
-        });
-
-    // Actual calculation
-    let mut first_number = 0;
-    let mut final_number = 0;
-
-    for number in 0..numbers.len() {
-
-        if number >= numbers.len() {
-            break;
-        }
-
-        if numbers[number] <= 9 {
-            numbers.remove(number);
-            continue;
-        }
-
-        if first_number == 0 {
-            first_number = numbers[number];
-        }
-
-        final_number = numbers[number];
-    };
-
-    if first_number == final_number || final_number == 0 {
-        return 0;
+fn get_upper_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
+    if line_index == 0 {
+        return String::new();
     }
 
-    first_number * final_number
+    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
+    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
+    get_substring(&schematics_vec[line_index - 1].to_string(), maximum_left, maximum_right)
+}
+
+fn get_middle_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
+    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
+    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
+
+    get_substring(&schematics_vec[line_index].to_string(), maximum_left, maximum_right)
+}
+
+fn get_lower_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
+    if line_index == schematics_vec.len() - 1 {
+        return String::new();
+    }
+
+    let maximum_left = std::cmp::max(character_index as i32 - 3, 0) as usize;
+    let maximum_right = std::cmp::min(character_index as i32 + 4, schematics_vec[0].len() as i32) as usize;
+
+    get_substring(&schematics_vec[line_index + 1].to_string(), maximum_left, maximum_right)
+}
+
+fn get_gear_numbers(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> Vec<u64> {
+    let mut result: Vec<u64> = Vec::new();
+
+    let upper_section = get_upper_section(schematics_vec, line_index, character_index);
+    let middle_section = get_middle_section(schematics_vec, line_index, character_index);
+    let lower_section = get_lower_section(schematics_vec, line_index, character_index);
+
+    result
 }
 
 pub fn get_gear_ratio(schematics: String) -> u64 {
     let mut result = 0;
 
-    let line_length: usize = schematics.split("\n").collect::<Vec<&str>>()[0].len();
-    let schematics_line: String = schematics.replace("\n", "");
+    let schematics_vec = schematics.split("\n").collect::<Vec<&str>>();
+    for line_index in 0..schematics_vec.len() {
 
-    for character_index in 0..schematics_line.len() {
-        let character = schematics_line.chars().nth(character_index).unwrap();
+        let line = schematics_vec[line_index];
 
-        if character != '*' {
-            continue;
+        for character_index in 0..line.len() {
+            let character = line.chars().nth(character_index).unwrap().to_string();
+
+            if character != "*" {
+                continue;
+            }
+
+            let gear_numbers = get_gear_numbers(&schematics_vec, line_index, character_index);
+            let gear_value = get_gear_value(gear_numbers);
+
+            result += gear_value;
         }
-
-        let gear_section = get_gear_section(&schematics_line, &line_length, &character_index);
-        let gear_value = get_gear_value(&gear_section);
-
-        result += gear_value;
     }
 
     result
