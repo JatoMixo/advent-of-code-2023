@@ -75,6 +75,7 @@ fn get_substring(schematics_line: &String, border_left: usize, border_right: usi
     substring
 }
 
+// TODO: Refactor these 3 functions into one to remove duplicate code
 fn get_upper_section(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> String {
     if line_index == 0 {
         return String::new();
@@ -103,12 +104,46 @@ fn get_lower_section(schematics_vec: &Vec<&str>, line_index: usize, character_in
     get_substring(&schematics_vec[line_index + 1].to_string(), maximum_left, maximum_right)
 }
 
+fn get_numbers_in_line(line: String) -> Vec<u64> {
+    let mut result = Vec::new();
+
+    let mut actual_number = 0;
+    for number_index in 0..line.len() {
+        match line.chars().nth(number_index).unwrap().to_string().parse::<u64>() {
+            Err(_) => {
+                if number_index <= 2 {
+                    actual_number = 0;
+                    continue;
+                }
+
+                if actual_number != 0 {
+                    result.push(actual_number);
+                    actual_number = 0;
+                }
+            },
+            Ok(value) => {
+                actual_number = actual_number * 10 + value;
+            }
+        }
+    }
+
+    if actual_number > 99 {
+        result.push(actual_number);
+    }
+
+    result
+}
+
 fn get_gear_numbers(schematics_vec: &Vec<&str>, line_index: usize, character_index: usize) -> Vec<u64> {
     let mut result: Vec<u64> = Vec::new();
 
     let upper_section = get_upper_section(schematics_vec, line_index, character_index);
     let middle_section = get_middle_section(schematics_vec, line_index, character_index);
     let lower_section = get_lower_section(schematics_vec, line_index, character_index);
+
+    result.extend(get_numbers_in_line(upper_section));
+    result.extend(get_numbers_in_line(middle_section));
+    result.extend(get_numbers_in_line(lower_section));
 
     result
 }
