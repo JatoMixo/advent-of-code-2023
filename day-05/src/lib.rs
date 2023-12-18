@@ -94,36 +94,3 @@ pub fn get_lowest_location(data: String) -> u64 {
 
     get_lowest_number(seeds)
 }
-
-fn get_seed_with_ranges(data: &Vec<&str>) -> Vec<u64> {
-    let numbers = get_seeds(data);
-
-
-}
-
-pub fn get_lowest_location_ranges(data: String) -> u64 {
-    let data_lines = data.split("\r\n").collect::<Vec<&str>>();
-
-    let mut seeds = get_seed_with_ranges(&data_lines);
-    let mut actual_map = Map::new();
-    for line_index in 0..data_lines.len() {
-        let line = data_lines[line_index];
-
-        if is_map_identifier(line) {
-            continue;
-        }
-
-        if line.is_empty() || line_index == data_lines.len() - 1 {
-            seeds.iter_mut().for_each(|seed| {
-                *seed = actual_map.get(*seed);
-            });
-
-            actual_map = Map::new();
-            continue;
-        }
-
-        actual_map.rules.push(Rule::from_string(line.to_string()));
-    }
-
-    get_lowest_number(seeds)
-}
