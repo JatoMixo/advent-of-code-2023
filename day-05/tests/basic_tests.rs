@@ -40,4 +40,9 @@ humidity-to-location map:\r
 60 56 37\r
 56 93 4".to_string()), 35);
     }
+
+    #[test]
+    fn the_definitive_1() {
+        assert_eq!(get_lowest_location(std::fs::read_to_string("seeds.txt").expect("The file again")), 174137457);
+    }
 }

@@ -1,3 +1,4 @@
+#[derive(Debug)]
 struct Rule {
     pub destination_range_start: u64,
     pub source_range_start: u64,
@@ -5,14 +6,6 @@ struct Rule {
 }
 
 impl Rule {
-    pub fn new() -> Rule {
-        Rule {
-            destination_range_start: 0,
-            source_range_start: 0,
-            range_length: 0,
-        }
-    }
-
     pub fn from_string(rule: String) -> Rule {
         let string_split = rule.split(" ").collect::<Vec<&str>>();
 
@@ -24,8 +17,7 @@ impl Rule {
     }
 
     pub fn get(&self, source_number: u64) -> u64 {
-        
-        if (self.source_range_start..self.source_range_start + self.range_length).contains(&source_number) {
+        if source_number >= self.source_range_start && source_number < self.source_range_start + self.range_length {
             return (source_number - self.source_range_start) + self.destination_range_start;
         }
 
@@ -33,6 +25,7 @@ impl Rule {
     }
 }
 
+#[derive(Debug)]
 struct Map {
     pub rules: Vec<Rule>,
 }
@@ -41,22 +34,6 @@ impl Map {
     pub fn new() -> Map {
         Map {
             rules: Vec::new()
-        }
-    }
-
-    pub fn from_vec_string(map_lines : Vec<&str>) -> Map {
-        let mut result = Vec::new();
-
-        map_lines
-            .iter()
-            .for_each(|&rule| {
-                if !rule.is_empty() {
-                    result.push(Rule::from_string(rule.to_string()));
-                }
-            });
-
-        Map {
-            rules: result
         }
     }
 
@@ -96,14 +73,47 @@ pub fn get_lowest_location(data: String) -> u64 {
 
     let mut seeds = get_seeds(&data_lines);
     let mut actual_map = Map::new();
-    for line_index in 2..data_lines.len() {
+    for line_index in 0..data_lines.len() {
         let line = data_lines[line_index];
 
         if is_map_identifier(line) {
             continue;
         }
 
-        if line.is_empty() && line_index != data_lines.len() {
+        if line.is_empty() || line_index == data_lines.len() - 1 {
+            seeds.iter_mut().for_each(|seed| {
+                *seed = actual_map.get(*seed);
+            });
+
+            actual_map = Map::new();
+            continue;
+        }
+
+        actual_map.rules.push(Rule::from_string(line.to_string()));
+    }
+
+    get_lowest_number(seeds)
+}
+
+fn get_seed_with_ranges(data: &Vec<&str>) -> Vec<u64> {
+    let numbers = get_seeds(data);
+
+
+}
+
+pub fn get_lowest_location_ranges(data: String) -> u64 {
+    let data_lines = data.split("\r\n").collect::<Vec<&str>>();
+
+    let mut seeds = get_seed_with_ranges(&data_lines);
+    let mut actual_map = Map::new();
+    for line_index in 0..data_lines.len() {
+        let line = data_lines[line_index];
+
+        if is_map_identifier(line) {
+            continue;
+        }
+
+        if line.is_empty() || line_index == data_lines.len() - 1 {
             seeds.iter_mut().for_each(|seed| {
                 *seed = actual_map.get(*seed);
             });
