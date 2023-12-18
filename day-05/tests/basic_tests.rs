@@ -1,4 +1,4 @@
-use day_05::get_lowest_location;
+use day_05::get_lowest_location_normal;
 
 #[cfg(test)]
 mod tests {
@@ -6,7 +6,7 @@ mod tests {
 
     #[test]
     fn basic_test() {
-        assert_eq!(get_lowest_location("seeds: 79 14 55 13\r
+        assert_eq!(get_lowest_location_normal("seeds: 79 14 55 13\r
 \r
 seed-to-soil map:\r
 50 98 2\r
@@ -43,6 +43,6 @@ humidity-to-location map:\r
 
     #[test]
     fn the_definitive_1() {
-        assert_eq!(get_lowest_location(std::fs::read_to_string("seeds.txt").expect("The file again")), 174137457);
+        assert_eq!(get_lowest_location_normal(std::fs::read_to_string("seeds.txt").expect("The file again")), 174137457);
     }
 }

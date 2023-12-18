@@ -68,10 +68,14 @@ fn is_map_identifier(line: &str) -> bool {
     line.contains(":")
 }
 
-pub fn get_lowest_location(data: String) -> u64 {
+pub fn get_lowest_location_normal(data: String) -> u64 {
     let data_lines = data.split("\r\n").collect::<Vec<&str>>();
+    let seeds = get_seeds(&data_lines);
 
-    let mut seeds = get_seeds(&data_lines);
+    get_lowest_location(data_lines, seeds)
+}
+
+fn get_lowest_location(data_lines: Vec<&str>, mut seeds: Vec<u64>) -> u64 {
     let mut actual_map = Map::new();
     for line_index in 0..data_lines.len() {
         let line = data_lines[line_index];

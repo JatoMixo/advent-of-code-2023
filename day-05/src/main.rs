@@ -1,7 +1,7 @@
-use day_05::get_lowest_location;
+use day_05::get_lowest_location_normal;
 
 fn main() {
     let input = std::fs::read_to_string("seeds.txt").expect("Forgot the file...");
 
-    println!("{}", get_lowest_location(input));
+    println!("{}", get_lowest_location_normal(input));
 }
