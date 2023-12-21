@@ -16,13 +16,22 @@ fn get_spring_numbers(arrangement_line: &str) -> Vec<u64> {
     numbers
 }
 
-pub fn calculate_multiple_arrangements(arrangements: String) -> u32 {
+fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
+    0
+}
+
+pub fn calculate_multiple_arrangements(arrangements: String) -> u64 {
+
+    let mut result = 0;
 
     let arrangement_lines = arrangements.split("\n").collect::<Vec<&str>>();
     arrangement_lines.iter().for_each(|&arrangement_line| {
         let spring_schema = get_spring_schema(arrangement_line);
         let spring_numbers = get_spring_numbers(arrangement_line);
+
+        let line_arrangements = calculate_line_arrangements(spring_schema, spring_numbers);
+        result += line_arrangements;
     });
 
-    0
+    result
 }
