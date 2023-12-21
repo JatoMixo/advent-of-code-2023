@@ -98,3 +98,12 @@ fn get_lowest_location(data_lines: Vec<&str>, mut seeds: Vec<u64>) -> u64 {
 
     get_lowest_number(seeds)
 }
+
+pub fn get_lowest_location_ranges(data: String) -> u64 {
+    let data_lines = data.split("\r\n").collect::<Vec<&str>>();
+    let original_seeds = get_seeds(&data_lines);
+
+    let mut lowest_location = 0;
+
+    lowest_location
+}

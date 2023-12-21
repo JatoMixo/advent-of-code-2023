@@ -1,0 +1,16 @@
+use day_12::calculate_mutliple_arrangements;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_test() {
+        assert_eq!(calculate_mutliple_arrangements("???.### 1,1,3
+.??..??...?##. 1,1,3
+?#?#?#?#?#?#?#? 1,3,1,6
+????.#...#... 4,1,1
+????.######..#####. 1,6,5
+?###???????? 3,2,1".to_string()), 21);
+    }
+}
