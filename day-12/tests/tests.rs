@@ -1,4 +1,4 @@
-use day_12::calculate_mutliple_arrangements;
+use day_12::calculate_multiple_arrangements;
 
 #[cfg(test)]
 mod tests {
@@ -6,7 +6,7 @@ mod tests {
 
     #[test]
     fn default_test() {
-        assert_eq!(calculate_mutliple_arrangements("???.### 1,1,3
+        assert_eq!(calculate_multiple_arrangements("???.### 1,1,3
 .??..??...?##. 1,1,3
 ?#?#?#?#?#?#?#? 1,3,1,6
 ????.#...#... 4,1,1
