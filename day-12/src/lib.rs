@@ -27,8 +27,25 @@ fn get_sections(spring_schema: &String) -> Vec<&str> {
         .collect::<Vec<&str>>()
 }
 
+#[derive(Debug, Default)]
+struct SpringCombination {
+    pub schema: String,
+    pub numbers: Vec<u64>,
+}
+
+fn get_spring_combinations(sections: &Vec<&str>, spring_numbers: &Vec<u64>) -> Vec<SpringCombination> {
+    let mut result = Vec::new();
+
+    sections.iter().for_each(|&section| {
+        
+    });
+
+    result
+}
+
 fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
     let sections = get_sections(&spring_schema);
+    let spring_combinations = get_spring_combinations(&sections, &spring_numbers);
 
     0
 }
