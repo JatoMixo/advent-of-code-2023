@@ -16,7 +16,20 @@ fn get_spring_numbers(arrangement_line: &str) -> Vec<u64> {
     numbers
 }
 
+fn get_sections(spring_schema: &String) -> Vec<&str> {
+    // Get basic Vector of elements in between dots
+    let spring_vector = spring_schema.split(".").collect::<Vec<&str>>();
+
+    // Remove empty elements created by several dots one after the other (....)
+    spring_vector
+        .into_iter()
+        .filter(|&section| !section.is_empty())
+        .collect::<Vec<&str>>()
+}
+
 fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
+    let sections = get_sections(&spring_schema);
+
     0
 }
 
