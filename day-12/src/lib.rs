@@ -27,17 +27,46 @@ fn get_sections(spring_schema: &String) -> Vec<&str> {
         .collect::<Vec<&str>>()
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 struct SpringCombination {
     pub schema: String,
     pub numbers: Vec<u64>,
 }
 
+impl SpringCombination {
+    pub fn new() -> SpringCombination {
+        SpringCombination {
+            schema: String::new(),
+            numbers: Vec::new(),
+        }
+    }
+}
+
 fn get_spring_combinations(sections: &Vec<&str>, spring_numbers: &Vec<u64>) -> Vec<SpringCombination> {
     let mut result = Vec::new();
+    let mut actual_number: usize = 0;
 
     sections.iter().for_each(|&section| {
-        
+        let mut numbers_sum = 0;
+        let mut numbers_length = 0;
+
+        let mut actual_combination = SpringCombination::new();
+        actual_combination.schema = section.to_string();
+
+        for number_index in actual_number..spring_numbers.len() {
+
+            let number = spring_numbers[number_index]; 
+
+            numbers_sum += number;
+            numbers_length += 1;
+
+            if section.len() as u64 >= numbers_sum + (numbers_length as f32/2f32).floor() as u64 {
+                actual_combination.numbers.push(number);
+                actual_number += 1;
+            }
+        };
+
+        result.push(actual_combination);
     });
 
     result
