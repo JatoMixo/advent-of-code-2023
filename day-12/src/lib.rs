@@ -72,11 +72,21 @@ fn get_spring_combinations(sections: &Vec<&str>, spring_numbers: &Vec<u64>) -> V
     result
 }
 
+fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
+    0
+}
+
 fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
     let sections = get_sections(&spring_schema);
     let spring_combinations = get_spring_combinations(&sections, &spring_numbers);
 
-    0
+    let mut result = 1;
+
+    for combination_index in 0..spring_combinations.len() {
+        result *= get_combination_posibilities(&spring_combinations[combination_index]);
+    }
+
+    result
 }
 
 pub fn calculate_multiple_arrangements(arrangements: String) -> u64 {
