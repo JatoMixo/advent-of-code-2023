@@ -72,7 +72,20 @@ fn get_spring_combinations(sections: &Vec<&str>, spring_numbers: &Vec<u64>) -> V
     result
 }
 
+fn sum_elements(elements: Vec<u64>) -> u64 {
+    elements.iter().sum()
+}
+
 fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
+    for number_index in 0..spring_combination.numbers.len() {
+        let number = spring_combination.numbers[number_index];
+
+        let first_broken = spring_combination.schema.find("#");
+        if first_broken.is_none() {
+            return (1..spring_combination.schema.len() as u64 - sum_elements(spring_combination.numbers.clone()) + 1).sum();
+        }
+    }
+
     0
 }
 
