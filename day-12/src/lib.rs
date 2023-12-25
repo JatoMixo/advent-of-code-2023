@@ -72,21 +72,53 @@ fn get_spring_combinations(sections: &Vec<&str>, spring_numbers: &Vec<u64>) -> V
     result
 }
 
-fn sum_elements(elements: Vec<u64>) -> u64 {
-    elements.iter().sum()
+fn get_substring(string: &String, starting_index: usize, ending_index: usize) -> String {
+    let mut result = String::new();
+
+    for character_index in starting_index..ending_index {
+        result += &string.chars().nth(character_index).unwrap().to_string();
+    }
+
+    result
+}
+
+fn get_vector_section(vector: &Vec<u64>, starting: usize, ending: usize) -> Vec<u64> {
+    let mut result = Vec::new();
+
+    for element_index in starting..ending {
+        result.push(vector[element_index]);
+    }
+
+    result
 }
 
 fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
+
+    let mut posibilities_per_number: Vec<u64> = Vec::new();
     for number_index in 0..spring_combination.numbers.len() {
         let number = spring_combination.numbers[number_index];
 
-        let first_broken = spring_combination.schema.find("#");
-        if first_broken.is_none() {
-            return (1..spring_combination.schema.len() as u64 - sum_elements(spring_combination.numbers.clone()) + 1).sum();
+        let numbers_before = get_vector_section(&spring_combination.numbers, 0, number_index);
+        let numbers_after = get_vector_section(&spring_combination.numbers, number_index + 1, spring_combination.numbers.len());
+
+        let starting_position = numbers_before.iter().sum::<u64>() + numbers_before.len() as u64;
+        let ending_position = spring_combination.schema.len() as u64 - (numbers_after.iter().sum::<u64>() + numbers_after.len() as u64);
+
+        let number_section = get_substring(&spring_combination.schema, starting_position as usize, ending_position as usize);
+
+        if number_section.find("#").is_none() {
+            posibilities_per_number.push(number_section.len() as u64 - number + 1);
         }
     }
 
-    0
+    let mut result = 1;
+    posibilities_per_number
+        .iter()
+        .for_each(|&number| {
+            result *= number;
+        });
+
+    result
 }
 
 fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
