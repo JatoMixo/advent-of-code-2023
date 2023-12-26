@@ -188,8 +188,6 @@ pub fn calculate_multiple_arrangements(arrangements: String) -> u64 {
         let spring_numbers = get_spring_numbers(arrangement_line);
 
         let line_arrangements = calculate_line_arrangements(spring_schema, spring_numbers);
-        println!("{}", line_arrangements);
-        println!("=====================");
         result += line_arrangements;
     });
 
