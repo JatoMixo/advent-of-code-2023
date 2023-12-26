@@ -108,15 +108,35 @@ fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
 
         if number_section.find("#").is_none() {
             posibilities_per_number.push(number_section.len() as u64 - number + 1);
+            continue;
         }
+
+        let mut actual_probabilities = number_section.len() as u64 - number + 1;
+        let section_split = number_section.split("#").filter(|&character| !character.is_empty()).collect::<Vec<&str>>();
+
+        if section_split.len() == 1 {
+            posibilities_per_number.push(1);
+            continue;
+        }
+
+        actual_probabilities -= (number - 1) - section_split[0].len() as u64;
+        actual_probabilities -= (number - 1) - section_split[1].len() as u64;
+
+        posibilities_per_number.push(actual_probabilities);
     }
 
-    let mut result = 1;
-    posibilities_per_number
-        .iter()
-        .for_each(|&number| {
-            result *= number;
-        });
+    let mut result = 0;
+
+    for number_index in 0..posibilities_per_number.len() {
+        let number = posibilities_per_number[number_index];
+
+        if number_index != posibilities_per_number.len() - 1 || posibilities_per_number.len() == 1 {
+            result += number;
+            continue;
+        }
+
+        result += (1..number + 1).sum::<u64>();
+    }
 
     result
 }
