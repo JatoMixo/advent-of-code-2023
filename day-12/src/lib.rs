@@ -101,11 +101,13 @@ fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
         let numbers_before = get_vector_section(&spring_combination.numbers, 0, number_index);
         let numbers_after = get_vector_section(&spring_combination.numbers, number_index + 1, spring_combination.numbers.len());
 
-        let starting_position = numbers_before.iter().sum::<u64>() + numbers_before.len() as u64;
+        let mut starting_position = numbers_before.iter().sum::<u64>() + numbers_before.len() as u64;
+        if spring_combination.schema.find("#").unwrap_or(5) == 1 && starting_position != 0 {
+            starting_position += 1;
+        }
         let ending_position = spring_combination.schema.len() as u64 - (numbers_after.iter().sum::<u64>() + numbers_after.len() as u64);
         
         let number_section = get_substring(&spring_combination.schema, starting_position as usize, ending_position as usize);
-        println!("{}", number_section);
         
         if number_section.find("#").is_none() {
             posibilities_per_number.push(number_section.len() as u64 - number + 1);
@@ -150,7 +152,7 @@ fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
             continue;
         }
         
-        result += (1..number + 1).sum::<u64>();
+        result += (1..number).sum::<u64>();
     }
 
     if result == 0 {
