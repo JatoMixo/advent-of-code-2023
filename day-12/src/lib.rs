@@ -10,7 +10,9 @@ fn get_spring_numbers(arrangement_line: &str) -> Vec<u64> {
     numbers_section
         .split(",")
         .for_each(|number| {
-            numbers.push(number.parse::<u64>().unwrap());
+            if number.parse::<u64>().is_ok() {
+                numbers.push(number.parse::<u64>().unwrap());
+            }
         });
 
     numbers
@@ -110,6 +112,7 @@ fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
         let number_section = get_substring(&spring_combination.schema, starting_position as usize, ending_position as usize);
         
         if number_section.find("#").is_none() {
+            println!("{}", number_section);
             posibilities_per_number.push(number_section.len() as u64 - number + 1);
             continue;
         }
