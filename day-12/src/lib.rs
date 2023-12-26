@@ -103,41 +103,60 @@ fn get_combination_posibilities(spring_combination: &SpringCombination) -> u64 {
 
         let starting_position = numbers_before.iter().sum::<u64>() + numbers_before.len() as u64;
         let ending_position = spring_combination.schema.len() as u64 - (numbers_after.iter().sum::<u64>() + numbers_after.len() as u64);
-
+        
         let number_section = get_substring(&spring_combination.schema, starting_position as usize, ending_position as usize);
-
+        println!("{}", number_section);
+        
         if number_section.find("#").is_none() {
             posibilities_per_number.push(number_section.len() as u64 - number + 1);
             continue;
         }
-
+        
         let mut actual_probabilities = number_section.len() as u64 - number + 1;
         let section_split = number_section.split("#").filter(|&character| !character.is_empty()).collect::<Vec<&str>>();
+        
+        if section_split.len() <= 1 {
+            posibilities_per_number.push(1);
+            continue;
+        }
+        
+        if section_split.len() > 2 {
+            posibilities_per_number.push(actual_probabilities - 1);
+            continue;
+        }
 
-        if section_split.len() == 1 {
+        if number_section.chars().filter(|&character| character == '#').count() as u64 == number {
             posibilities_per_number.push(1);
             continue;
         }
 
         actual_probabilities -= (number - 1) - section_split[0].len() as u64;
         actual_probabilities -= (number - 1) - section_split[1].len() as u64;
-
+        
         posibilities_per_number.push(actual_probabilities);
     }
-
+    
     let mut result = 0;
-
+    
     for number_index in 0..posibilities_per_number.len() {
         let number = posibilities_per_number[number_index];
 
+        if number == 0 || number == 1 {
+            continue;
+        }
+        
         if number_index != posibilities_per_number.len() - 1 || posibilities_per_number.len() == 1 {
             result += number;
             continue;
         }
-
+        
         result += (1..number + 1).sum::<u64>();
     }
 
+    if result == 0 {
+        return 1;
+    }
+    
     result
 }
 
@@ -164,6 +183,8 @@ pub fn calculate_multiple_arrangements(arrangements: String) -> u64 {
         let spring_numbers = get_spring_numbers(arrangement_line);
 
         let line_arrangements = calculate_line_arrangements(spring_schema, spring_numbers);
+        println!("{}", line_arrangements);
+        println!("=====================");
         result += line_arrangements;
     });
 
