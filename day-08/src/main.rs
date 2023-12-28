@@ -38,7 +38,7 @@ fn get_maps(string: String) -> HashMap<String, Map> {
 fn calculate_steps(input: String) -> u64 {
     let (instructions, maps) = input.split_once("\r\n\r\n").unwrap();
 
-    let mut location = maps.clone().split_once(" = ").unwrap().0.to_string();
+    let mut location = "AAA".to_string();
     let mut steps: u64 = 0;
 
     let instructions = instructions.to_string();
