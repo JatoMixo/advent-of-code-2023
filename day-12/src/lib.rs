@@ -18,26 +18,6 @@ fn get_spring_numbers(arrangement_line: &str) -> Vec<u64> {
     numbers
 }
 
-fn get_substring(string: &String, starting_index: usize, ending_index: usize) -> String {
-    let mut result = String::new();
-
-    for character_index in starting_index..ending_index {
-        result += &string.chars().nth(character_index).unwrap().to_string();
-    }
-
-    result
-}
-
-fn get_vector_section(vector: &Vec<u64>, starting: usize, ending: usize) -> Vec<u64> {
-    let mut result = Vec::new();
-
-    for element_index in starting..ending {
-        result.push(vector[element_index]);
-    }
-
-    result
-}
-
 fn calculate_line_arrangements(spring_schema: String, spring_numbers: Vec<u64>) -> u64 {
     if spring_schema.find("?").is_none() {
 
