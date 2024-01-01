@@ -1,5 +1,6 @@
 # Advent of Code 2023
 These are my solutions to the Advent of Code 2023. They're all made in Rust.
+There are solutions for Days from 1 to 6, 8 and the first part of the 12 day.
 
 # To work with it
 ```bash
